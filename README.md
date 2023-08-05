@@ -4,11 +4,14 @@
 
 
 Para generar los resultados expuestos aqui, se debe clonar el repositoria:
+
+
 `git https://github.com/jdrincone/show-tv.git`
 
 Crear un entorno virtual e installar los requerimientos
 $ pip install -r requeriments.txt
 
 Adicionar archivo de credenciles en la carpeta de input (solicitar a `jdrincone@gmail.com`)
-Ejecutar
-$ python main.py
+Ejecutar:
+
+`python main.py`
