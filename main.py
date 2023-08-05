@@ -4,5 +4,5 @@ from src.db import execute_bd
 
 if __name__ == '__main__':
     execution_pipeline()
-    execute_bd()
+    #execute_bd()
     

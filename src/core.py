@@ -3,13 +3,26 @@ import pandas as pd
 import datetime
 import json
 import fastparquet
-import ydata_profiling
-from ydata_profiling.utils.cache import cache_file
-import logging
-from metadata.paths import Paths
 import itertools
+import logging
+import ydata_profiling
+
+from ydata_profiling.utils.cache import cache_file
+
+from metadata.paths import Paths
+
+
+logging.basicConfig(
+    format="%(asctime)s %(levelname)s:%(name)s: %(message)s",
+    level=logging.INFO,
+    datefmt="%H:%M:%S",
+)
+logger = logging.getLogger(__name__)
+
 
 path = Paths()
+
+
 def list_dates(start_date: datetime.date, end_date: datetime.date) -> list:
     """ Lista con las fechas entre dos fechas de interés.
 
@@ -140,6 +153,20 @@ def conteo_show_tv_por_genero(detalle_data: pd.DataFrame) -> pd.DataFrame:
     return show_genero
 
 
+def lista_dominios_oficiales_show_tv(detalle_data: pd.DataFrame) -> list:
+    """ Lista los dominios oficiales
+
+    Args:
+        detalle_data: Show emítidos en Dicciembre del 2022.
+
+    Return
+        Cantidad de show de tv segmentado por género.
+    """
+    dominios = detalle_data.officialSite.unique().tolist()
+
+    return dominios
+
+
 def calcular_runtime_promedio(detalle_data: pd.DataFrame) -> float:
     """ Calcula el runtime promedio teniendo en cuenta todos los shows que poseen runtime del mes
     de Dicciembre del 2022
@@ -205,9 +232,13 @@ def execution_pipeline():
     execute_save(df_det_consolidado, f"show_detalle_consolidado")
 
     show_genero = conteo_show_tv_por_genero(df_det_consolidado)
-    print(show_genero)
+    logger.info(f"show_genero: {show_genero}")
+
     run_mean = calcular_runtime_promedio(df_det_consolidado)
-    print(run_mean)
+    logger.info(f"run_mean: {run_mean}")
+
+    dominios = lista_dominios_oficiales_show_tv(df_det_consolidado)
+    logger.info(f"dominios: {dominios}")
 
 
 if __name__ == '__main__':
