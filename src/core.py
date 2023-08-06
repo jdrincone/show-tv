@@ -224,7 +224,7 @@ def execute_save(datos: pd.DataFrame, name: str):
 
 def created_tables():
     start_date = datetime.date(2022, 12, 1)
-    end_date = datetime.date(2022, 12, 2)
+    end_date = datetime.date(2022, 12, 31)
     dates = list_dates(start_date, end_date)
     lista_df_dia = []
     lista_df_det_dia = []

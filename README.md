@@ -25,9 +25,9 @@ el cual activa todo el pipeline del proyecto en el siguiente orden:
   estadísticos descriptivos y distribución de los feature que contiene cada 
   dataframe, los resultados se almacenan en formato html en `.\profiling`
 - Se construye una base de datos en sqlite y se almancen bajo el
-  modelo referencial encontrado en `\.model`, el consolidado de los show y detalle
+  modelo referencial encontrado en `.\model`, el consolidado de los show y detalle
   de estos que fueron emitidos el mes de dicciembre del 2022. La
-  base de datos se almacena en la raiz del repositorio en el archivo `lulobank.bd`
+  base de datos se almacena en `.\bd`
   y el cual puede ser abierto en sqlite view https://inloop.github.io/sqlite-viewer/.
 
 -  Por último se muestra por consola:
