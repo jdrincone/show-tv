@@ -1,8 +1,6 @@
 
-from src.core import execution_pipeline
-from src.db import execute_bd
+from src.core import execute_pipeline
 
 if __name__ == '__main__':
-    execution_pipeline()
-    #execute_bd()
+    execute_pipeline()
     

@@ -1,16 +1,17 @@
-import requests
-import pandas as pd
 import datetime
-import json
 import fastparquet
 import itertools
+import json
 import logging
-import ydata_profiling
+import requests
+import pandas as pd
+import sqlite3
 
+import ydata_profiling
 from ydata_profiling.utils.cache import cache_file
 
 from metadata.paths import Paths
-
+from src.db import drop_tables, create_tables, load_staging_tables
 
 logging.basicConfig(
     format="%(asctime)s %(levelname)s:%(name)s: %(message)s",
@@ -86,7 +87,7 @@ def transform_json_to_dataframe(data: json) -> tuple:
         df_detalle['id'] = element.get('id')
         list_df.append(df_detalle)
     detalle_df = pd.concat(list_df)
-    df = dataclean_to_dataframe(df)
+    df = dataclean_to_dataframe_prinpal(df)
 
     return df, detalle_df
 
@@ -110,7 +111,7 @@ def save_profile(df: pd.DataFrame, name_profile: str):
     profile_report.to_file(name_profile)
 
 
-def dataclean_to_dataframe(data: pd.DataFrame) -> pd.DataFrame:
+def dataclean_to_dataframe_prinpal(data: pd.DataFrame) -> pd.DataFrame:
     """ Depuración y ordenamientos de las categorias que pueden tomar algunas fetures en
     el dataframe de trabajo.
 
@@ -130,6 +131,22 @@ def dataclean_to_dataframe(data: pd.DataFrame) -> pd.DataFrame:
     cols = ['id', 'id_embedded', 'url', 'name', 'season', 'number', 'type',
             'airdate', 'airtime', 'airstamp', 'runtime', 'rating_average',
             'medium', 'original', '_links_self', '_links_show', 'summary']
+    data_dep = data.loc[:, cols]
+    return data_dep
+
+
+def dataclean_to_dataframe_secudario(data: pd.DataFrame) -> pd.DataFrame:
+    """ Depuración y ordenamientos de las categorias que pueden tomar algunas fetures en
+    el dataframe de trabajo.
+
+    Args:
+        data: Datos de trabajo.
+
+    Return
+        Dataframe depurado.
+    """
+    cols = ['id_embedded', 'url', 'name', 'type', 'language',
+            'officialSite', 'weight', 'summary', 'updated', 'id']
     data_dep = data.loc[:, cols]
     return data_dep
 
@@ -185,7 +202,7 @@ def calcular_runtime_promedio(detalle_data: pd.DataFrame) -> float:
     es una medida robusta de centralidad.
     """
     runtime_promedio = detalle_data.runtime.mean()
-    return runtime_promedio.roud(2)
+    return runtime_promedio.round(2)
 
 
 def execute_save(datos: pd.DataFrame, name: str):
@@ -205,9 +222,9 @@ def execute_save(datos: pd.DataFrame, name: str):
     save_profile(datos, name_profile_df)
 
 
-def execution_pipeline():
+def created_tables():
     start_date = datetime.date(2022, 12, 1)
-    end_date = datetime.date(2022, 12, 31)
+    end_date = datetime.date(2022, 12, 2)
     dates = list_dates(start_date, end_date)
     lista_df_dia = []
     lista_df_det_dia = []
@@ -240,8 +257,20 @@ def execution_pipeline():
     dominios = lista_dominios_oficiales_show_tv(df_det_consolidado)
     logger.info(f"dominios: {dominios}")
 
+    df_det_consolidado = dataclean_to_dataframe_secudario(df_det_consolidado)
+
+    return df_consolidado, df_det_consolidado
+
+
+def execute_pipeline():
+    conn = sqlite3.connect(path.db_lulobank)
+    cursor = conn.cursor()
+    drop_tables(cursor, conn)
+    create_tables(cursor, conn)
+
+    consolidado_shows, consolidado_detalle_shows = created_tables()
+    load_staging_tables(cursor, conn, consolidado_shows, consolidado_detalle_shows)
+
 
 if __name__ == '__main__':
-    execution_pipeline()
-
-
+    execute_pipeline()

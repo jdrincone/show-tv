@@ -8,6 +8,7 @@ class Paths:
     profiling = os.path.join(path_file, "..", "profiling")
     path_input = os.path.join(path_file, "..", "input")
     cred = os.path.join(path_input, "cred.yaml")
+    db_lulobank = os.path.join(path_file, "..", "db", "lulobank.bd")
 
     def root_json(self, name_file):
         """Genera las rutas donde se almacena los testigos para cada reporte.

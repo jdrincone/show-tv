@@ -2,4 +2,4 @@ requests
 pandas
 fastparquet
 ydata_profiling
-psycopg2
+pytest
