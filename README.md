@@ -37,8 +37,8 @@ el cual activa todo el pipeline del proyecto en el siguiente orden:
     - El listado de los link o paginas web oficiales de los shows.
 
 
-![Estrella](image/cant_show_genero.png)
-![Estrella](image/runtime.png)
+![cant_show_genero](image/cant_show_genero.png)
+![runtime](image/runtime.png)
 
 
 - Por ultimo, se generan algunos test unitarios de funciones 
