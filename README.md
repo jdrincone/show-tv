@@ -45,3 +45,5 @@ el cual activa todo el pipeline del proyecto en el siguiente orden:
   del core del proyecto, estos podran ejecutarsen con:
 
 `pytest .\test\test.py`
+
+Actualizar
